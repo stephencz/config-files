@@ -1,0 +1,140 @@
+" Load Plugins
+call plug#begin()
+
+    " Theme Plugins
+    Plug 'morhetz/gruvbox'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+
+    " File Navigation
+    Plug 'ctrlpvim/ctrlp.vim'
+
+    " Writing Related Plugins
+    Plug 'reedes/vim-pencil'
+    Plug 'junegunn/goyo.vim'
+    Plug 'junegunn/limelight.vim'
+    Plug 'godlygeek/tabular'
+    Plug 'preservim/vim-markdown'
+
+    " Coding Related Plugins
+    Plug 'Valloric/YouCompleteMe'               " Code Completion
+    Plug 'dense-analysis/ale'                   " Asynchronous Linting Engine
+    Plug 'mattn/emmet-vim'                      " Web Dev Code Expansion
+    Plug 'preservim/nerdtree'                   " In-Editor File Tree
+    Plug 'airblade/vim-gitgutter'               " Gutter to should Git diff
+    Plug 'chrisbra/vim-commentary'              " For easy commenting and uncommenting
+    Plug 'alvan/vim-closetag'                 " For easy tag closing
+
+    " Pacing Plugin
+    " Plug '/home/stephen/.vim/plugged/vim-pacing'
+
+call plug#end()
+
+" Configure Color Scheme
+set background=dark
+colorscheme gruvbox
+
+" Configure CtrlP Fuzzy Finder
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+map <leader>cp :CtrlP
+
+"
+" WRITING RELATED CONFIGURATION START
+"
+
+
+" Configure limelight
+let g:limelight_conceal_ctermfg = 'gray'
+map <leader>ll :Limelight!!<CR>
+
+" Configure Goyo and Zen Mode
+let g:goyo_width = 80
+map <leader>gg :Goyo<CR>
+
+command ZenMode :Goyo | Limelight!!
+map <leader>zm :ZenMode<CR>
+
+" Configure Pencil
+let g:pencil#wrapModeDefault = 'soft'
+
+function WritingMode()
+    call pencil#init()
+    :set spell
+    :set nonumber
+endfunction
+
+augroup pencil
+    autocmd!
+    autocmd FileType markdown,mkd   call WritingMode()
+    autocmd FileType text           call WritingMode()
+augroup end
+
+
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellBad gui=undercurl
+
+"
+" WRITING RELATED CONFIGURATION END
+"
+
+"
+" CODING RELATED CONFIGURATION START
+"
+
+"Configure GitGutter
+highlight GitGutterAdd guifg=#009900 ctermfg=Green
+highlight GitGutterChange guifg=#bbbb00 ctermfg=Yellow
+highlight GitGutterDelete guifg=#ff2222 ctermfg=Red
+
+let g:gitgutter_enabled = 1
+let g:gitgutter_map_keys = 0
+
+"Configure NERDTree
+nmap <C-f> :NERDTreeToggle<CR>
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Open the existing NERDTree on each new tab.
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+
+" Faster split navigation rebindings
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" Configure vim-closetag
+let g:closetag_filenames = '*.html'
+
+" Disable Folding
+set nofoldenable
+
+"
+" CODING RELATED CONFIGURATION END
+"
+
+"
+" GENERAL VIM CONFIGURATION
+"
+
+" Configure Tabs and Spaces
+filetype plugin indent on
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set number
+
+" Turn on Filetype
+filetype on
+filetype plugin on
+filetype indent on
+
+" Configure Tabs and Spaces for Makefiles
+autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
