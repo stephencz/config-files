@@ -1,0 +1,78 @@
+" Load Plugins
+call plug#begin()
+
+    " Writing Related Plugins
+    Plug 'reedes/vim-pencil'
+    Plug 'junegunn/goyo.vim'
+    Plug 'junegunn/limelight.vim'
+    Plug 'godlygeek/tabular'
+    Plug 'preservim/vim-markdown'
+
+call plug#end()
+
+" Configure Color Scheme
+set background=dark
+
+" Configure CtrlP Fuzzy Finder
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+map <leader>cp :CtrlP
+
+"
+" WRITING RELATED CONFIGURATION START
+"
+
+
+" Configure limelight
+let g:limelight_conceal_ctermfg = 'gray'
+map <leader>ll :Limelight!!<CR>
+
+" Configure Goyo and Zen Mode
+let g:goyo_width = 80
+map <leader>gg :Goyo<CR>
+
+command ZenMode :Goyo | Limelight!!
+map <leader>zm :ZenMode<CR>
+
+" Configure Pencil
+let g:pencil#wrapModeDefault = 'soft'
+
+function WritingMode()
+    call pencil#init()
+    :set nonumber
+endfunction
+
+augroup pencil
+    autocmd!
+    autocmd FileType markdown,mkd   call WritingMode()
+    autocmd FileType text           call WritingMode()
+augroup end
+
+
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellBad gui=undercurl
+
+"
+" WRITING RELATED CONFIGURATION END
+"
+
+"
+" GENERAL VIM CONFIGURATION
+"
+
+" Configure Tabs and Spaces
+filetype plugin indent on
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set number
+
+" Turn on Filetype
+filetype on
+filetype plugin on
+filetype indent on
+
+" Configure Tabs and Spaces for Makefiles
+autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
